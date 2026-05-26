@@ -8,13 +8,12 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #f5f4f0;
-      --surface: #eceae4;
-      --border: #d6d3cb;
-      --text-primary: #1a1a1a;
-      --text-muted: #888;
-      --accent: #c47a1e;
-      --danger: #c0392b;
+      --bg: #ffffff;
+      --border: #e8e8e8;
+      --text-primary: #111111;
+      --text-muted: #666666;
+      --text-soft: #555555;
+      --accent: #d0021b;
     }
 
     body {
@@ -27,152 +26,133 @@
       align-items: center;
       justify-content: center;
       padding: 2rem;
-      overflow: hidden;
-    }
-
-    /* Subtle vignette */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
-      pointer-events: none;
-      z-index: 0;
     }
 
     .container {
-      position: relative;
-      z-index: 1;
-      max-width: 620px;
+      max-width: 560px;
       width: 100%;
       text-align: center;
+      animation: fadeIn 0.5s ease both;
     }
 
-    /* Clock */
     .clock {
-      font-size: 1rem;
-      letter-spacing: 0.2em;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
       color: var(--text-muted);
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
+      text-transform: uppercase;
       font-variant-numeric: tabular-nums;
     }
 
-    /* Main headline */
-    .headline {
-      font-size: clamp(2.4rem, 6vw, 4rem);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      color: var(--text-primary);
-      margin-bottom: 1.25rem;
-    }
-
-    .headline em {
-      font-style: normal;
+    /* Big counter — the gut-punch */
+    .counter-number {
+      font-size: clamp(6rem, 18vw, 10rem);
+      font-weight: 900;
+      line-height: 1;
       color: var(--accent);
+      letter-spacing: -0.04em;
     }
 
-    /* Subtext */
-    .subtext {
-      font-size: 1.05rem;
+    .counter-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
       color: var(--text-muted);
-      line-height: 1.7;
-      margin-bottom: 2.5rem;
+      margin-top: 0.4rem;
+      margin-bottom: 2.75rem;
     }
 
-    /* Divider */
+    /* Headline */
+    .headline {
+      font-size: clamp(1.9rem, 5vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .subtext {
+      font-size: 0.97rem;
+      color: var(--text-soft);
+      line-height: 1.8;
+      margin-bottom: 2.75rem;
+    }
+
     .divider {
-      width: 40px;
-      height: 2px;
+      width: 32px;
+      height: 1px;
       background: var(--border);
-      margin: 2rem auto;
+      margin: 0 auto 2.5rem;
     }
 
-    /* Quote */
-    .quote-block {
-      border-left: 2px solid var(--accent);
-      padding: 0.75rem 1.25rem;
-      text-align: left;
-      margin-bottom: 2.5rem;
-      background: var(--surface);
-      border-radius: 0 6px 6px 0;
+    /* Question */
+    .question {
+      font-size: 0.97rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
     }
 
-    .quote-text {
+    .question-input {
+      width: 100%;
+      border: none;
+      border-bottom: 1.5px solid var(--border);
+      padding: 0.5rem 0;
       font-size: 0.95rem;
-      font-style: italic;
-      color: #bbb;
-      line-height: 1.6;
-      margin-bottom: 0.4rem;
+      color: var(--text-primary);
+      background: transparent;
+      outline: none;
+      text-align: center;
+      font-family: inherit;
+      margin-bottom: 2.75rem;
+      transition: border-color 0.2s;
     }
 
-    .quote-author {
+    .question-input::placeholder { color: #bbb; }
+    .question-input:focus { border-color: #aaa; }
+
+    /* Countdown */
+    .countdown-hint {
       font-size: 0.78rem;
       color: var(--text-muted);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 1rem;
+      min-height: 1.2em;
+      transition: opacity 0.4s;
     }
 
-    /* Session counter */
-    .session-box {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      margin-bottom: 2.5rem;
-      letter-spacing: 0.04em;
-    }
-
-    .session-count {
-      color: var(--danger);
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    /* Action buttons */
-    .actions {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-      align-items: center;
-    }
-
-    .btn-back {
+    /* Close button */
+    .btn-close {
       display: inline-block;
-      padding: 0.85rem 2.2rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      text-decoration: none;
-      letter-spacing: 0.06em;
+      padding: 0.85rem 2.5rem;
+      border: 1.5px solid #d8d8d8;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      color: #bbb;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      cursor: pointer;
+      cursor: not-allowed;
       background: transparent;
-      transition: border-color 0.2s, color 0.2s;
+      font-family: inherit;
+      min-width: 200px;
+      transition: border-color 0.3s, color 0.3s;
     }
 
-    .btn-back:hover {
-      border-color: #555;
-      color: #999;
+    .btn-close.ready {
+      cursor: pointer;
+      border-color: #aaa;
+      color: #444;
     }
 
-    .dismiss-label {
-      font-size: 0.72rem;
-      color: #3a3a3a;
-      letter-spacing: 0.04em;
+    .btn-close.ready:hover {
+      border-color: #111;
+      color: #111;
     }
 
-    /* Breathing animation on the main card */
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(18px); }
+      from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .container {
-      animation: fadeIn 0.6s ease both;
     }
   </style>
 </head>
@@ -181,37 +161,39 @@
 
     <div class="clock" id="clock">--:-- --</div>
 
-    <h1 class="headline">
-      You were about to<br>read <em>the news.</em>
-    </h1>
+    <div class="counter-number" id="session-count">—</div>
+    <div class="counter-label">times you've been here today</div>
+
+    <h1 class="headline">You're not curious.<br>You're avoiding.</h1>
 
     <p class="subtext">
-      The world will keep spinning.<br>
-      Your work will not do itself.
+      This isn't about the news.<br>
+      You're chasing a dopamine hit — and you know it.
     </p>
 
     <div class="divider"></div>
 
-    <div class="quote-block" id="quote-block">
-      <p class="quote-text" id="quote-text"></p>
-      <p class="quote-author" id="quote-author"></p>
-    </div>
+    <p class="question">What were you doing before this?</p>
+    <input
+      class="question-input"
+      id="task-input"
+      type="text"
+      placeholder="type it out..."
+      autocomplete="off"
+      spellcheck="false"
+    />
 
-    <div class="session-box">
-      <span>You've been redirected here</span>
-      <span class="session-count" id="session-count">—</span>
-      <span>times today.</span>
-    </div>
-
-    <div class="actions">
-      <button class="btn-back" onclick="history.back()">← Go Back</button>
-      <span class="dismiss-label">or close this tab and get back to work</span>
-    </div>
+    <p class="countdown-hint" id="countdown-hint">
+      Sit with it. Closing in <strong id="countdown">10</strong>s.
+    </p>
+    <button class="btn-close" id="btn-close" disabled onclick="window.close()">
+      CLOSE TAB
+    </button>
 
   </div>
 
   <script>
-    // --- Clock ---
+    // Clock
     function updateClock() {
       const now = new Date();
       const h = now.getHours();
@@ -223,35 +205,34 @@
     updateClock();
     setInterval(updateClock, 10000);
 
-    // --- Quotes ---
-    const quotes = [
-      { text: "What you pay attention to becomes your life.", author: "James Williams" },
-      { text: "The successful warrior is the average person, with laser-like focus.", author: "Bruce Lee" },
-      { text: "Attention is the rarest and purest form of generosity.", author: "Simone Weil" },
-      { text: "Almost everything will work again if you unplug it for a few minutes — including you.", author: "Anne Lamott" },
-      { text: "The news is just the news. Your focus is irreplaceable.", author: "" },
-      { text: "You can do anything, but not everything.", author: "David Allen" },
-      { text: "The cost of a thing is the amount of life required to be exchanged for it.", author: "Henry David Thoreau" },
-      { text: "News is to the mind what sugar is to the body.", author: "Rolf Dobelli" },
-      { text: "The present moment is the only time over which we have dominion.", author: "Thich Nhat Hanh" },
-      { text: "Deep work is the superpower of the 21st century.", author: "Cal Newport" },
-    ];
-
-    const q = quotes[Math.floor(Math.random() * quotes.length)];
-    document.getElementById('quote-text').textContent = `"${q.text}"`;
-    document.getElementById('quote-author').textContent = q.author || 'Unknown';
-
-    // --- Session counter (persisted in localStorage, resets at midnight) ---
+    // Session counter
     function getTodayKey() {
       const d = new Date();
       return `nb_count_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
     }
-
     const key = getTodayKey();
     const prev = parseInt(localStorage.getItem(key) || '0', 10);
     const next = prev + 1;
     localStorage.setItem(key, next);
     document.getElementById('session-count').textContent = next;
+
+    // Countdown — 10 seconds before close button unlocks
+    let remaining = 10;
+    const btn = document.getElementById('btn-close');
+    const countEl = document.getElementById('countdown');
+    const hintEl = document.getElementById('countdown-hint');
+
+    const timer = setInterval(() => {
+      remaining--;
+      if (remaining <= 0) {
+        clearInterval(timer);
+        btn.classList.add('ready');
+        btn.disabled = false;
+        hintEl.textContent = "You can leave now. But the urge has probably already passed.";
+      } else {
+        countEl.textContent = remaining;
+      }
+    }, 1000);
   </script>
 </body>
 </html>
