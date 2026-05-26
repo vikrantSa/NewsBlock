@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hey. Not Now.</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --border: #2a2a2a;
+      --text-primary: #f0f0f0;
+      --text-muted: #666;
+      --accent: #e8c547;
+      --danger: #e05252;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    /* Subtle vignette */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 620px;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Clock */
+    .clock {
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Main headline */
+    .headline {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+    }
+
+    .headline em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    /* Subtext */
+    .subtext {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Divider */
+    .divider {
+      width: 40px;
+      height: 2px;
+      background: var(--border);
+      margin: 2rem auto;
+    }
+
+    /* Quote */
+    .quote-block {
+      border-left: 2px solid var(--accent);
+      padding: 0.75rem 1.25rem;
+      text-align: left;
+      margin-bottom: 2.5rem;
+      background: var(--surface);
+      border-radius: 0 6px 6px 0;
+    }
+
+    .quote-text {
+      font-size: 0.95rem;
+      font-style: italic;
+      color: #bbb;
+      line-height: 1.6;
+      margin-bottom: 0.4rem;
+    }
+
+    .quote-author {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Session counter */
+    .session-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      letter-spacing: 0.04em;
+    }
+
+    .session-count {
+      color: var(--danger);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    /* Action buttons */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      align-items: center;
+    }
+
+    .btn-back {
+      display: inline-block;
+      padding: 0.85rem 2.2rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: transparent;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-back:hover {
+      border-color: #555;
+      color: #999;
+    }
+
+    .dismiss-label {
+      font-size: 0.72rem;
+      color: #3a3a3a;
+      letter-spacing: 0.04em;
+    }
+
+    /* Breathing animation on the main card */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .container {
+      animation: fadeIn 0.6s ease both;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="clock" id="clock">--:-- --</div>
+
+    <h1 class="headline">
+      You were about to<br>read <em>the news.</em>
+    </h1>
+
+    <p class="subtext">
+      The world will keep spinning.<br>
+      Your work will not do itself.
+    </p>
+
+    <div class="divider"></div>
+
+    <div class="quote-block" id="quote-block">
+      <p class="quote-text" id="quote-text"></p>
+      <p class="quote-author" id="quote-author"></p>
+    </div>
+
+    <div class="session-box">
+      <span>You've been redirected here</span>
+      <span class="session-count" id="session-count">—</span>
+      <span>times today.</span>
+    </div>
+
+    <div class="actions">
+      <button class="btn-back" onclick="history.back()">← Go Back</button>
+      <span class="dismiss-label">or close this tab and get back to work</span>
+    </div>
+
+  </div>
+
+  <script>
+    // --- Clock ---
+    function updateClock() {
+      const now = new Date();
+      const h = now.getHours();
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const h12 = h % 12 || 12;
+      document.getElementById('clock').textContent = `${h12}:${m} ${ampm}`;
+    }
+    updateClock();
+    setInterval(updateClock, 10000);
+
+    // --- Quotes ---
+    const quotes = [
+      { text: "What you pay attention to becomes your life.", author: "James Williams" },
+      { text: "The successful warrior is the average person, with laser-like focus.", author: "Bruce Lee" },
+      { text: "Attention is the rarest and purest form of generosity.", author: "Simone Weil" },
+      { text: "Almost everything will work again if you unplug it for a few minutes — including you.", author: "Anne Lamott" },
+      { text: "The news is just the news. Your focus is irreplaceable.", author: "" },
+      { text: "You can do anything, but not everything.", author: "David Allen" },
+      { text: "The cost of a thing is the amount of life required to be exchanged for it.", author: "Henry David Thoreau" },
+      { text: "News is to the mind what sugar is to the body.", author: "Rolf Dobelli" },
+      { text: "The present moment is the only time over which we have dominion.", author: "Thich Nhat Hanh" },
+      { text: "Deep work is the superpower of the 21st century.", author: "Cal Newport" },
+    ];
+
+    const q = quotes[Math.floor(Math.random() * quotes.length)];
+    document.getElementById('quote-text').textContent = `"${q.text}"`;
+    document.getElementById('quote-author').textContent = q.author || 'Unknown';
+
+    // --- Session counter (persisted in localStorage, resets at midnight) ---
+    function getTodayKey() {
+      const d = new Date();
+      return `nb_count_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
+    }
+
+    const key = getTodayKey();
+    const prev = parseInt(localStorage.getItem(key) || '0', 10);
+    const next = prev + 1;
+    localStorage.setItem(key, next);
+    document.getElementById('session-count').textContent = next;
+  </script>
+</body>
+</html>
